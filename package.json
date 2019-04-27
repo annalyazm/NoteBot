@@ -18,8 +18,7 @@
     "opusscript": "0.0.3",
     "simple-youtube-api": "^3.0.0",
     "ytdl-core": "^0.16.0",
-    "ffmpeg-binaries": "4.0.0",
-    "ffmpeg": "0.0.4"
+    "ffmpeg-binaries": "4.0.0"
   },
   "devDependencies": {
     "eslint": "^4.0.0",
