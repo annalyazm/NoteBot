@@ -14,7 +14,7 @@
   "author": "iCrawl",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.1.4",
+    "discord.js": "^11.4.2",
     "opusscript": "0.0.3",
     "simple-youtube-api": "^3.0.0",
     "ytdl-core": "^0.16.0",
