@@ -15,7 +15,8 @@ console.log('oKtHiSrEaDyLeTsDoThIsYaYhErOkUcAnHoStMuZiCbOt')
 });
 
 const { Client, Util } = require('discord.js');
-const { TOKEN, PREFIX, GOOGLE_API_KEY} = require('./config');
+const PREFIX = "~"
+const GOOGLE_API_KEY = "AIzaSyD5HkfjExwmv2HFDfS0zwAHdkrNNEmJcsw"
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 
@@ -36,9 +37,8 @@ client.on('disconnect', () => console.log('I just disconnected, making sure you 
 client.on('reconnecting', () => console.log('I am reconnecting now!'));
 
 client.on('message', async msg => { // eslint-disable-line
-	if (msg.author.bot) return undefined;
 	if (!msg.content.startsWith(PREFIX)) return undefined;
-	console.log(`${message.content}`)
+	console.log(`ohh`)
 
 	const args = msg.content.split(' ');
 	const searchString = args.slice(1).join(' ');
