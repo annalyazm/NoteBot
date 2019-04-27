@@ -78,7 +78,7 @@ client.on('message', async msg => { // eslint-disable-line
 					msg.channel.send(`
 __**검색결과:**__
 ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
-1 - 10 을 입력하여 선택해!
+1 - 10 을 입력하여 선택하시면 됩니다.
 					`);
 					// eslint-disable-next-line max-depth
 					try {
