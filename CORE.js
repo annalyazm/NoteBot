@@ -1,18 +1,8 @@
 const Discord = require('discord.js');
-const app = new Discord.Client();
 const fs = require('fs');
 
 let TheToken = process.env.BotToken
-app.login(TheToken)
 
-app.on('ready', () => {
-  app.guilds.array().forEach((eachGuild) => {
-    if (eachGuild.voiceConnection) {
-      eachGuild.voiceConnection.channel.leave()
-    }
-})
-console.log('oKtHiSrEaDyLeTsDoThIsYaYhErOkUcAnHoStMuZiCbOt')
-});
 
 const { Client, Util } = require('discord.js');
 const PREFIX = "~"
@@ -20,7 +10,18 @@ const GOOGLE_API_KEY = "AIzaSyD5HkfjExwmv2HFDfS0zwAHdkrNNEmJcsw"
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 
-const client = new Client({ disableEveryone: true });
+const client = new Discord.Client();
+
+client.login(TheToken)
+
+client.on('ready', () => {
+  client.guilds.array().forEach((eachGuild) => {
+    if (eachGuild.voiceConnection) {
+      eachGuild.voiceConnection.channel.leave()
+    }
+})
+console.log('oKtHiSrEaDyLeTsDoThIsYaYhErOkUcAnHoStMuZiCbOt')
+});
 
 const youtube = new YouTube(GOOGLE_API_KEY);
 
