@@ -1,8 +1,7 @@
 const Discord = require('discord.js');
 const app = new Discord.Client();
+const client = new Discord.Client();
 const fs = require('fs');
-const ytdl = require('ytdl-core');
-const ytsearch = require('youtube-search');
 
 let TheToken = process.env.BotToken
 app.login(TheToken)
@@ -16,77 +15,196 @@ app.on('ready', () => {
 console.log('oKtHiSrEaDyLeTsDoThIsYaYhErOkUcAnHoStMuZiCbOt')
 });
 
-app.on('message', (message) => {
-  let search = message.content.slice(process.env.mupf.length)
-  if ((search === '그만불러' || search === '닥쳐') && message.content.startsWith(process.env.mupf) && song[message.channel.id]) {
-    song[message.channel.id].end()
-    message.channel.send('쳇... ')
-  } else if ((search === '잠만뭠춰봐' || search === '잠만') && message.content.startsWith(process.env.mupf) && song[message.channel.id]) {
-    song[message.channel.id].pause()
-    message.channel.send('뮤? 일단 뭠췄다뮤! 다시 키려면 `mz!다시불러`, 다른 노래로 바꾸고 싶다면 `mz!그만불러`를 사용하라뮤!')
-  } else if ((search === '계속불러' || search === '플레이') && message.content.startsWith(process.env.mupf) && song[message.channel.id]) {
-    song[message.channel.id].resume()
-    message.channel.send('뮤봇이 계속 불러준다뮤~')
-  } else if (search && message.content.startsWith(process.env.mupf) && !song[message.channel.id]) {
-    if (message.member.voiceChannel) {
-      if (!message.guild.voiceConnection) {
-        message.member.voiceChannel.join()
-      }
-      message.channel.send('검색중... ' + search).then((th) => {
-        ytch(search, {
-          maxResults: 1,
-          key: ytToken,
-          type: 'video'
-        }, (err, results) => {
-          if (err) {
-            th.edit('에러발생!\n' + err)
-          } else {
-            ytdl.getBasicInfo(results[0].link, (err1, info) => {
-              if (err1) th.edit('에러발생!\n' + err1)
+const { Client, Util } = require('discord.js');
+const { TOKEN, PREFIX, GOOGLE_API_KEY} = require('./config');
+const YouTube = require('simple-youtube-api');
+const ytdl = require('ytdl-core');
 
-              song[msg.channel.id] = msg.guild.voiceConnection.playStream(ytdl(results[0].link, { audioonly: true }), { volume: 0.5 })
+const client = new Client({ disableEveryone: true });
 
-              let songEmb = new discord.RichEmbed()
-                .setAuthor(msg.author.username + '님이 뮤봇의 노래를 듣고있습니다', msg.author.displayAvatarURL)
-                .setTitle(results[0].title)
-                .setDescription(results[0].description)
-                .addField('영상 길이', Math.floor(parseInt(info.length_seconds) / 60) + ':' + parseInt(info.length_seconds) % 60, true)
-                .addField('플레이 시간', 0, true)
-                .setThumbnail(results[0].thumbnails.default.url)
-                .setColor(randomHexColor())
-                .setFooter('유튜브 서비스 상태의 따라 재생속도가 느리거나 음질이 좋지 않을 수 있습니다')
-              th.edit(songEmb)
-              msg.channel.send('컨트롤러: ``mz!그만불러`` | ``mz!잠만뭠춰봐`` | ``mz!계속불러``')
+const youtube = new YouTube(GOOGLE_API_KEY);
 
-              timeCounter[msg.channel.id] = 0
-              timeCycle[msg.channel.id] = setInterval(() => {
-                timeCounter[msg.channel.id]++
-                songEmb.fields[1].value = Math.floor(timeCounter[msg.channel.id] / 60) + ':' + timeCounter[msg.channel.id] % 60 + ' (**-' + (parseInt(info.length_seconds) - timeCounter[msg.channel.id]) + '초**)'
-                songEmb.setThumbnail(null)
-                th.edit(songEmb)
-              }, 1000)
-              song[msg.channel.id].on('end', () => {
-                let songEndEmb = new discord.RichEmbed()
-                  .setAuthor(msg.author.username + '님이 뮤봇의 노래를 듣고있*었*습니다', msg.author.displayAvatarURL)
-                  .setTitle(results[0].title)
-                  .setDescription(results[0].description)
-                  .setThumbnail(results[0].thumbnails.default.url)
-                  .setColor('#ff0000')
-                  .setFooter('유튜브 서비스 상태의 따라 재생속도가 느리거나 음질이 좋지 않을 수 있*었*습니다')
-                clearTimeout(timeCycle[msg.channel.id])
-                timeCycle[msg.channel.id] = null
-                song[msg.channel.id] = null
-                msg.member.voiceChannel.leave()
-                th.edit(songEndEmb)
-              })
-            })
-          }
-        })
-      })
-    } else {
-      msg.channel.send('음성채팅방에 ' + msg.author.username + '가 없다뮤! 아무때나 들어가서 다시 부르라뮤!')
-    }
-  } else if (msg.content.startsWith(process.env.mupf) && song[msg.channel.id]) {
-    msg.channel.send('이미 재생중인 노래가 있다뮤! `mz!그만불러`를 사용하라뮤!')
-  }
-})
+const queue = new Map();
+
+client.on('warn', console.warn);
+
+client.on('error', console.error);
+
+client.on('ready', () => console.log('Yo this ready!'));
+
+client.on('disconnect', () => console.log('I just disconnected, making sure you know, I will reconnect now...'));
+
+client.on('reconnecting', () => console.log('I am reconnecting now!'));
+
+client.on('message', async msg => { // eslint-disable-line
+	if (msg.author.bot) return undefined;
+	if (!msg.content.startsWith(PREFIX)) return undefined;
+
+	const args = msg.content.split(' ');
+	const searchString = args.slice(1).join(' ');
+	const url = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '';
+	const serverQueue = queue.get(msg.guild.id);
+
+	let command = msg.content.toLowerCase().split(' ')[0];
+	command = command.slice(PREFIX.length)
+
+	if (command === '불러줘' || command === '플레이') {
+		const voiceChannel = msg.member.voiceChannel;
+		if (!voiceChannel) return msg.channel.send(`${msg.author.username} 이 음성채널에 없습니다. \n음성채널에 들어간다음 다시 시도해 보세요.`);
+		const permissions = voiceChannel.permissionsFor(msg.client.user);
+		if (!permissions.has('CONNECT')) {
+			return msg.channel.send('그곳에 들어갈수 있는 권한이 없음..\n서버 설정에 역할에 들어가서 워터봇이 관리자 권한을 가지고 있는지 확인해주세요.');
+		}
+		if (!permissions.has('SPEAK')) {
+			return msg.channel.send('말하기 권한이 없어;; 노래좀 부르게 해줘..');
+		}
+
+		if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
+			const playlist = await youtube.getPlaylist(url);
+			const videos = await playlist.getVideos();
+			for (const video of Object.values(videos)) {
+				const video2 = await youtube.getVideoByID(video.id); // eslint-disable-line no-await-in-loop
+				await handleVideo(video2, msg, voiceChannel, true); // eslint-disable-line no-await-in-loop
+			}
+			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다!`);
+		} else {
+			try {
+				var video = await youtube.getVideo(url);
+			} catch (error) {
+				try {
+					var videos = await youtube.searchVideos(searchString, 10);
+					let index = 0;
+					msg.channel.send(`
+__**검색결과:**__
+${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
+1 - 10 을 입력하여 선택해!
+					`);
+					// eslint-disable-next-line max-depth
+					try {
+						var response = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
+							maxMatches: 1,
+							time: 10000,
+							errors: ['time']
+						});
+					} catch (err) {
+						console.error(err);
+						return msg.channel.send('시간초과 ㅅㄱ');
+					}
+					const videoIndex = parseInt(response.first().content);
+					var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
+				} catch (err) {
+					console.error(err);
+					return msg.channel.send('🆘 음? 검색이 안됨..');
+				}
+			}
+			return handleVideo(video, msg, voiceChannel);
+		}
+	} else if (command === '그만불러' || command === '스킵' || command === '닥쳐') {
+		if (!msg.member.voiceChannel) return msg.channel.send('넌 내 노래를 듣고있지도 않은데 뭘 스킵이야');
+		if (!serverQueue) return msg.channel.send('스킵할 노래가 없음;;');
+		serverQueue.connection.dispatcher.end('쳇..');
+		return undefined;
+	} else if (command === '멈춰' || command === '초기화') {
+		if (!msg.member.voiceChannel) return msg.channel.send('먼저 음성 채널에 들어가시죠');
+		if (!serverQueue) return msg.channel.send('님한테 멈춰줄 노래가 없네요 ㅅㄱ');
+		serverQueue.songs = [];
+		serverQueue.connection.dispatcher.end('초기화됨!');
+		return undefined;
+	} else if (command === '볼륨') {
+		if (!msg.member.voiceChannel) return msg.channel.send('음성 채널에 먼저 들어와!');
+		if (!serverQueue) return msg.channel.send('부르고 있는 노래가 없어;;');
+		if (!args[1]) return msg.channel.send(`현재 볼륨: **${serverQueue.volume}**`);
+		serverQueue.volume = args[1];
+		serverQueue.connection.dispatcher.setVolumeLogarithmic(args[1] / 5);
+		return msg.channel.send(`볼륨 변경 완료! : **${args[1]}**`);
+	} else if (command === '뭐부르고있음' || command === '지금' || command === '뭐임') {
+		if (!serverQueue) return msg.channel.send('아무것도 안부름');
+		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}**`);
+	} else if (command === '재생목록' || command === '뭐남음') {
+		if (!serverQueue) return msg.channel.send('아무것도 안남음');
+		return msg.channel.send(`
+__**재생목록:**__
+${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}
+**지금 부르는거:** ${serverQueue.songs[0].title}
+		`);
+	} else if (command === '일시정지' || command === '잠만') {
+		if (serverQueue && serverQueue.playing) {
+			serverQueue.playing = false;
+			serverQueue.connection.dispatcher.pause();
+			return msg.channel.send('⏸ 일시정지됨!');
+		}
+		return msg.channel.send('잠깐 멈춰줄 노래가 없음');
+	} else if (command === '다시불러') {
+		if (serverQueue && !serverQueue.playing) {
+			serverQueue.playing = true;
+			serverQueue.connection.dispatcher.resume();
+			return msg.channel.send('▶ ㅇㅋ 다시부름!');
+		}
+		return msg.channel.send('다시부를게 없네');
+	}
+
+	return undefined;
+});
+
+async function handleVideo(video, msg, voiceChannel, playlist = false) {
+	const serverQueue = queue.get(msg.guild.id);
+	console.log(video);
+	const song = {
+		id: video.id,
+		title: Util.escapeMarkdown(video.title),
+		url: `https://www.youtube.com/watch?v=${video.id}`
+	};
+	if (!serverQueue) {
+		const queueConstruct = {
+			textChannel: msg.channel,
+			voiceChannel: voiceChannel,
+			connection: null,
+			songs: [],
+			volume: 0.5,
+			playing: true
+		};
+		queue.set(msg.guild.id, queueConstruct);
+
+		queueConstruct.songs.push(song);
+
+		try {
+			var connection = await voiceChannel.join();
+			queueConstruct.connection = connection;
+			play(msg.guild, queueConstruct.songs[0]);
+		} catch (error) {
+			console.error(`채널에 들어갈수 없음: ${error}`);
+			queue.delete(msg.guild.id);
+			return msg.channel.send(`채널에 들어갈수 없음: ${error}`);
+		}
+	} else {
+		serverQueue.songs.push(song);
+		console.log(serverQueue.songs);
+		if (playlist) return undefined;
+		else return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다!`);
+	}
+	return undefined;
+}
+
+function play(guild, song) {
+	const serverQueue = queue.get(guild.id);
+
+	if (!song) {
+		serverQueue.voiceChannel.leave();
+		queue.delete(guild.id);
+		return;
+	}
+	console.log(serverQueue.songs);
+
+	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+		.on('end', reason => {
+			if (reason === 'Stream is not generating quickly enough.') console.log('Song ended.');
+			else console.log(reason);
+			serverQueue.songs.shift();
+			play(guild, serverQueue.songs[0]);
+		})
+		.on('error', error => console.error(error));
+	dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+
+	serverQueue.textChannel.send(`🎶  **${song.title}** 부를게`);
+}
+
