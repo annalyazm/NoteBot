@@ -1,33 +1,34 @@
 {
-  "name": "yumeko",
-  "version": "0.1.0",
-  "description": "A simple discord bot",
+  "name": "muzicbotapi",
+  "version": "1.0.0",
+  "description": "",
   "main": "CORE.js",
   "scripts": {
-    "test": ""
+    "test": "node CORE.js"
   },
-  "keywords": [
-    "discord",
-    "bot",
-    "discordbot"
-  ],
-  "author": "iCrawl",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PMHStudio/DiscordMuzicBot.git"
+  },
+  "author": "PMH Studio / PMH",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PMHStudio/DiscordMuzicBot/issues"
+  },
+  "homepage": "https://github.com/PMHStudio/DiscordMuzicBot#readme",
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0"
+  },
   "dependencies": {
     "discord.js": "^11.4.2",
-    "opusscript": "0.0.3",
-    "simple-youtube-api": "^3.0.0",
-    "ytdl-core": "^0.16.0",
-    "ffmpeg-binaries": "4.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^4.0.0",
-    "eslint-config-aqua": "^1.0.0"
-  },
-  "eslintConfig": {
-    "extends": "aqua",
-    "rules": {
-      "no-console": 0
-    }
+    "opusscript": "0.0.6",
+    "random-hex-color": "^1.0.1",
+    "yt-search": "^0.4.1",
+    "ytdl-core": "^0.29.1"
   }
 }
