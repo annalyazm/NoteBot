@@ -109,7 +109,7 @@ message.channel.awaitMessages(filter, {
 		} else {
 			song[message.channel.id] = msg.guild.voiceConnection.playStream(ytdl(search, { filter : audioonly }));
 			
-			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
+			message.channel.send(`${search} 이(가) 플레이됩니다!`)
 		
 		}
 	} 
