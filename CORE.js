@@ -64,8 +64,7 @@ app.on('message', async message => {
 			collector.once('collect', function(m) {
 				
 			let info = await ytdl.getinfo([this.videos.[parseInt(m.content)-1.url]]);
-			let connection = await message.member.voiceChannel.join();
-			let dispacher = await connection.playStream(ytdl([this.videos.[parseInt(m.content)-1.url]], { filter : audioonly }));
+			song[message.channel.id] = msg.guild.voiceConnection.playStream(ytdl([this.videos.[parseInt(m.content)-1.url]], { filter : audioonly }));
 			
 			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
 			
@@ -73,8 +72,7 @@ app.on('message', async message => {
 		});
 		} else {
 			let info = await ytdl.getinfo(search);
-			let connection = await message.member.voiceChannel.join();
-			let dispacher = await connection.playStream(ytdl(search, { filter : audioonly }));
+			song[message.channel.id] = msg.guild.voiceConnection.playStream(ytdl(search, { filter : audioonly }));
 			
 			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
 		
