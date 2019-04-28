@@ -99,6 +99,7 @@ message.channel.awaitMessages(filter, {
 	}
 		
 	});
+	  }
 	  });
 	
 	
