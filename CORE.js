@@ -62,7 +62,7 @@ app.on('message', async message => {
 			collector.videos = videos;
 			
 			collector.once('collect', function(m) {
-		        let searchthing = videos.[parseInt(m.content)-1.url]
+		        let searchthing = this.videos.[parseInt(m.content)-1.url]
 				
 			let info = await ytdl.getinfo(searchthing);
 			let connection = await message.member.voiceChannel.join();
