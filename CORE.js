@@ -62,11 +62,10 @@ app.on('message', async message => {
 			collector.videos = videos;
 			
 			collector.once('collect', function(m) {
-		        let searchthing = [this.videos.[parseInt(m.content)-1.url]]
 				
-			let info = await ytdl.getinfo(searchthing);
+			let info = await ytdl.getinfo([this.videos.[parseInt(m.content)-1.url]]);
 			let connection = await message.member.voiceChannel.join();
-			let dispacher = await connection.playStream(ytdl(searchthing, { filter : audioonly }));
+			let dispacher = await connection.playStream(ytdl([this.videos.[parseInt(m.content)-1.url]], { filter : audioonly }));
 			
 			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
 			
