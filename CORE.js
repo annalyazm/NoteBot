@@ -75,7 +75,7 @@ message.channel.awaitMessages(filter, {
 		max: 1
 }).then((collected) => {	
 	let co = collected.first().content;
-	if(co === "1") {
+	if (co === "1") {
 		song[msg.channel.id] = msg.guild.voiceConnection.playStream(ytdl(results[0].link, { audioonly: true }), { volume: 0.5 })
 	message.channel.send(`${results[0].title} 이(가) 플레이됩니다!`)
 	} else if (co === "2") {
@@ -87,7 +87,7 @@ message.channel.awaitMessages(filter, {
 				song[msg.channel.id] = msg.guild.voiceConnection.playStream(ytdl(results[2].link, { audioonly: true }), { volume: 0.5 })
 	message.channel.send(`${results[2].title} 이(가) 플레이됩니다!`)
 		
-	}else if (co === "4") {
+	} else if (co === "4") {
 				song[msg.channel.id] = msg.guild.voiceConnection.playStream(ytdl(results[3].link, { audioonly: true }), { volume: 0.5 })
 	message.channel.send(`${results[3].title} 이(가) 플레이됩니다!`)
 		
@@ -99,9 +99,9 @@ message.channel.awaitMessages(filter, {
 	}
 		
 	});
+	  });
 	
 	
-});
 		  
 
               
@@ -112,7 +112,8 @@ message.channel.awaitMessages(filter, {
 			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
 		
 		}
-	} else if (msg === "그만불러" || msg === "닥쳐" || msg === "스킵"){
+	} 
+	if (msg === "그만불러" || msg === "닥쳐" || msg === "스킵"){
 		return
 	}
 	
