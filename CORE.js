@@ -1,13 +1,12 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 
-let TheToken = process.env.BotToken
 
 
 
 
 const ytkey = "AIzaSyD5HkfjExwmv2HFDfS0zwAHdkrNNEmJcsw"
-const ytsc = require('yt-search');
+const ytsc = require('youtube-search');
 const ytdl = require('ytdl-core');
 
 const app = new Discord.Client();
@@ -16,6 +15,7 @@ let song = []
 let timeCounter = []
 let timeCycle = []
 
+let TheToken = process.env.BotToken
 app.login(TheToken)
 
 app.on('ready', () => {
@@ -48,30 +48,42 @@ app.on('message', async message => {
 		
 		if(!validate) {
 		
-		ytch(search, function(err, res) {
-			let videos = res.videos.slice(0, 10)
-			let resp = '';
-			for (var i in videos) {
-				resp += `[${parseInt(i)+1}] : \`${videos[i].title}\`\n`;
-			}
-			resp += `\n 1 - ${videos.length} 에서 하나 고르시면 됩니다`
-		message.channel.send(resp)
-			const filter = m => !isNaN(m.content) && m.content < videos.length+1 && m.content > 0;
-			const collector = message.channel.createMessageCollector(filter);
-			
-			collector.videos = videos;
-			
-			collector.once('collect', function(m) {
-				
-			let info = ytdl.getinfo([this.videos.[parseInt(m.content)-1.url]]);
-			song[message.channel.id] = msg.guild.voiceConnection.playStream(ytdl([this.videos.[parseInt(m.content)-1.url]], { filter : audioonly }));
-			
-			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
-			
-			})
-		});
+        ytch(search, {
+          maxResults: 5,
+          key: ytkey,
+          type: 'video'
+        }, (err, results) => {
+          if (err) {
+            console.log('에러발생!\n' + err)
+          } else {
+		  
+		  message.channel.send(`
+1. ${results[0].title}
+2. ${results[1].title}
+3. ${results[2].title}
+4. ${results[3].title}
+5. ${results[4].title}
+
+1 - 5 중 하나를 입력하세요.
+
+`)
+		  let userid = message.author.id
+		  const filter = (m) => m.author.id === userid && m.content === "1" || m.content === "2" || m.content === "3" || m.content === "4" || m.content === "5"
+
+
+message.channel.awaitMessages(filter, {
+		max: 1
+}).then((collected) => {	
+	
+	if(collected)
+	
+	
+});
+		  
+
+              
+
 		} else {
-			let info = await ytdl.getinfo(search);
 			song[message.channel.id] = msg.guild.voiceConnection.playStream(ytdl(search, { filter : audioonly }));
 			
 			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
