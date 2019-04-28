@@ -63,7 +63,7 @@ app.on('message', async message => {
 			
 			collector.once('collect', function(m) {
 				
-			let info = await ytdl.getinfo([this.videos.[parseInt(m.content)-1.url]]);
+			let info = ytdl.getinfo([this.videos.[parseInt(m.content)-1.url]]);
 			song[message.channel.id] = msg.guild.voiceConnection.playStream(ytdl([this.videos.[parseInt(m.content)-1.url]], { filter : audioonly }));
 			
 			message.channel.send(`${info.title} 이(가) 플레이됩니다!`)
