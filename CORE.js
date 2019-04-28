@@ -37,6 +37,8 @@ app.on('message', async message => {
 	
 	if(msg === "플레이" || msg === "불러줘") {
 		
+		console.log('yay')
+		
 		if(!message.member.voiceChannel) return message.channel.send('음성 채널에 들어가셔야 합니다')
 	        if(message.guild.me.voiceChannel) return message.channel.send('지금 다른곳에서 노래부르고있음')
 		
