@@ -73,12 +73,12 @@ client.on('message', async msg => { // eslint-disable-line
 				var video = await youtube.getVideo(url);
 			} catch (error) {
 				try {
-					var videos = await youtube.searchVideos(searchString, 10);
+					var videos = await youtube.searchVideos(searchString, 5);
 					let index = 0;
 					msg.channel.send(`
 __**검색결과:**__
 ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
-1 - 10 을 입력하여 선택하시면 됩니다.
+1 - 5 를 입력하여 선택하시면 됩니다.
 					`);
 					// eslint-disable-next-line max-depth
 					try {
