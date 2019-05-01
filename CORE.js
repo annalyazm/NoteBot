@@ -57,7 +57,7 @@ client.on('message', async msg => { // eslint-disable-line
 			return msg.channel.send('그곳에 들어갈수 있는 권한이 없음..\n서버 설정에 역할에 들어가서 워터봇이 관리자 권한을 가지고 있는지 확인해주세요.');
 		}
 		if (!permissions.has('SPEAK')) {
-			return msg.channel.send('말하기 권한이 없어;; 노래좀 부르게 해줘..');
+			return msg.channel.send('말하기 권한이 없어;;');
 		}
 
 		if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
@@ -78,38 +78,45 @@ client.on('message', async msg => { // eslint-disable-line
 					msg.channel.send(`
 __**검색결과:**__
 ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
-1 - 5 를 입력하여 선택하시면 됩니다.
-					`);
+1 - 5 를 입력하여 선택하시면 됩니다. (20초가 지나면 시간초과로 취소됩니다)
+					`).then((th) => {
 					// eslint-disable-next-line max-depth
 					try {
 						var response = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
 							maxMatches: 1,
-							time: 10000,
+							time: 20000,
 							errors: ['time']
 						});
 					} catch (err) {
 						console.error(err);
-						return msg.channel.send('시간초과 ㅅㄱ');
+						return th.edit('시간초과 ㅅㄱ');
+						
 					}
+				
 					const videoIndex = parseInt(response.first().content);
 					var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
 				} catch (err) {
 					console.error(err);
-					return msg.channel.send('🆘 음? 검색이 안됨..');
+					return th.edit('🆘 음? 검색이 안됨..');
 				}
 			}
+				th.delete
 			return handleVideo(video, msg, voiceChannel);
+				
+				});
 		}
 	} else if (command === '그만불러' || command === '스킵' || command === '닥쳐') {
 		if (!msg.member.voiceChannel) return msg.channel.send('넌 내 노래를 듣고있지도 않은데 뭘 스킵이야');
 		if (!serverQueue) return msg.channel.send('스킵할 노래가 없음;;');
 		serverQueue.connection.dispatcher.end('쳇..');
+		msg.channel.send("알겠어 그만부를게..");
 		return undefined;
 	} else if (command === '멈춰' || command === '초기화') {
 		if (!msg.member.voiceChannel) return msg.channel.send('먼저 음성 채널에 들어가시죠');
 		if (!serverQueue) return msg.channel.send('님한테 멈춰줄 노래가 없네요 ㅅㄱ');
 		serverQueue.songs = [];
 		serverQueue.connection.dispatcher.end('초기화됨!');
+		msg.channel.send("음악을 멈추고 재생목록을 초기화했어 ㅂㅇ");
 		return undefined;
 	} else if (command === '볼륨') {
 		if (!msg.member.voiceChannel) return msg.channel.send('음성 채널에 먼저 들어와!');
