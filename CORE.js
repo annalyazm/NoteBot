@@ -79,7 +79,7 @@ client.on('message', async msg => { // eslint-disable-line
 __**검색결과:**__
 ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 1 - 5 를 입력하여 선택하시면 됩니다. (20초가 지나면 시간초과로 취소됩니다)
-					`).then((th) => {
+					`).then((th) => th.delete(20000));
 					// eslint-disable-next-line max-depth
 					try {
 						var response = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
@@ -89,7 +89,7 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 						});
 					} catch (err) {
 						console.error(err);
-						return th.edit('시간초과 ㅅㄱ');
+						return msg.channel.send('시간초과 ㅅㄱ');
 						
 					}
 				
@@ -97,13 +97,12 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 					var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
 				} catch (err) {
 					console.error(err);
-					return th.edit('🆘 음? 검색이 안됨..');
+					return msg.channel.send('🆘 음? 검색이 안됨..');
 				}
 			}
-				th.delete
 			return handleVideo(video, msg, voiceChannel);
 				
-				});
+				
 		}
 	} else if (command === '그만불러' || command === '스킵' || command === '닥쳐') {
 		if (!msg.member.voiceChannel) return msg.channel.send('넌 내 노래를 듣고있지도 않은데 뭘 스킵이야');
