@@ -33,7 +33,7 @@ client.on('error', console.error);
 
 client.on('message', async msg => { // eslint-disable-line
 	if (!msg.content.startsWith(PREFIX)) return undefined;
-
+console.log('ohh')
 	const args = msg.content.split(' ');
 	const searchString = args.slice(2).join(' ');
 	const url = args[2] ? args[2].replace(/<(.+)>/g, '$1') : '';
