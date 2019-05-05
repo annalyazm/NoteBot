@@ -42,8 +42,7 @@ console.log('ohh')
 	const url2 = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '';
 
 
-	let command = msg.content.split(' ')[0];
-	command = command.slice(PREFIX.length)
+	let command = msg.content.split(' ')[1];
  
 
 	if (command === '불러줘' || command === '플레이') {
