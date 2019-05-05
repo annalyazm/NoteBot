@@ -42,7 +42,7 @@ console.log('ohh')
 	const url2 = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '';
 
 
-	let command = msg.content.toLowerCase().split(' ')[0];
+	let command = msg.content.toLowerCase().split(' ')[1];
 	command = command.slice(PREFIX.length)
  
 
