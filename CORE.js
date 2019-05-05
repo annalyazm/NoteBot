@@ -32,7 +32,7 @@ client.on('warn', console.warn);
 client.on('error', console.error);
 
 client.on('message', async msg => { // eslint-disable-line
-	if (!msg.content.startsWith(PREFIX)) return undefined;
+	if (!msg.content.startsWith('노트')) return undefined;
 console.log('ohh')
 	const args = msg.content.split(' ');
 	const searchString = args.slice(2).join(' ');
