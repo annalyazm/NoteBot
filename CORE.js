@@ -116,7 +116,11 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 				const video2 = await youtube.getVideoByID(video.id); // eslint-disable-line no-await-in-loop
 				await handleVideo(video2, msg, voiceChannel, true); // eslint-disable-line no-await-in-loop
 			}
-			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다!`);
+	     ytdl.getBasicInfo(playlist.url, (err1, info) => {
+	       let vedl = `${info.length_seconds / 60}`
+	       vedl.replace('.', ':')
+			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
+	     });
 		} else {
 			try {
 				var video = await youtube.getVideo(url2);
@@ -184,8 +188,8 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 		if (!serverQueue) return msg.channel.send('아무것도 안부름');
 		ytdl.getBasicInfo(serverQueue.songs[0].url, (err1, info) => {
 	       let vedl = `${info.length_seconds / 60}`
-	       info.replace('.', ':')
-		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}**`);
+	       vedl.replace('.', ':')
+		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}** ( ${vedl} )`);
 		});
 	} else if (command === '재생목록' || command === '뭐남음' || msg.content.startsWith('노트큐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안남음');
@@ -247,7 +251,11 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
 		serverQueue.songs.push(song);
 		console.log(serverQueue.songs);
 		if (playlist) return undefined;
-		else return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다!`);
+		ytdl.getBasicInfo(song.url, (err1, info) => {
+	       let vedl = `${info.length_seconds / 60}`
+	       vedl.replace('.', ':')
+		else return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
+});
 	}
 	return undefined;
 }
@@ -271,6 +279,10 @@ function play(guild, song) {
 		})
 		.on('error', error => console.error(error));
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
+	      ytdl.getBasicInfo(song.url, (err1, info) => {
+	       let vedl = `${info.length_seconds / 60}`
+	       vedl.replace('.', ':')
 
-	serverQueue.textChannel.send(`🎶  **${song.title}** 들려줄게`);
+	serverQueue.textChannel.send(`🎶  **${song.title}** (${vedl}) 들려줄게`);
+	      });
 }
