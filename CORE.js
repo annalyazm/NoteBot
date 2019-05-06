@@ -259,6 +259,7 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
 		
 });
 	}
+}
 	return undefined;
 }
 
