@@ -31,9 +31,8 @@ client.on('warn', console.warn);
 
 client.on('error', console.error);
 
-client.on('message', async msg => { // eslint-disable-line
+client.on('message', async msg => { 
 	if (!msg.content.startsWith('노트')) return undefined;
-console.log('ohh')
 	const args = msg.content.split(' ');
 	const searchString = args.slice(2).join(' ');
 	const url = args[2] ? args[2].replace(/<(.+)>/g, '$1') : '';
@@ -41,8 +40,8 @@ console.log('ohh')
         const searchString2 = args.slice(1).join(' ');
 	const url2 = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '';
 
-
-	let command = msg.content.split(' ')[1];
+        let pr = msg.content.replace('노트야 ', '')
+	let command = pr.split(' ')[0];
  
 
 	if (command === '불러줘' || command === '플레이') {
@@ -60,8 +59,8 @@ console.log('ohh')
 			const playlist = await youtube.getPlaylist(url);
 			const videos = await playlist.getVideos();
 			for (const video of Object.values(videos)) {
-				const video2 = await youtube.getVideoByID(video.id); // eslint-disable-line no-await-in-loop
-				await handleVideo(video2, msg, voiceChannel, true); // eslint-disable-line no-await-in-loop
+				const video2 = await youtube.getVideoByID(video.id); 
+				await handleVideo(video2, msg, voiceChannel, true); 
 			}
 			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다!`);
 		} else {
@@ -76,7 +75,6 @@ __**검색결과:**__
 ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 1 - 5 를 입력하여 선택하시면 됩니다. (20초가 지나면 시간초과로 취소됩니다)
 					`).then((th) => th.delete(20000));
-					// eslint-disable-next-line max-depth
 					try {
 						var response = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
 							maxMatches: 1,
