@@ -301,7 +301,7 @@ function play(guild, song) {
 			play(guild, serverQueue.songs[0]);
 		})
 		.on('error', error => console.error(error));
-	dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
+	dispatcher.setVolumeLogarithmic(serverQueue.volume);
 	      ytdl.getBasicInfo(song.url, (err1, info) => {
 	       let vedl = `${info.length_seconds / 60}`
 	       vedl = vedl.replace('.', ':')
