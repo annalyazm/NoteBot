@@ -72,7 +72,7 @@ client.on('message', async msg => {
 					let index = 0;
 					msg.channel.send(`
 __**검색결과:**__
-${videos.map(video2 => `**${++index} -** ${video2.title} ( ${video2.length} )`).join('\n')}
+${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 1 - 5 를 입력하여 선택하시면 됩니다. (20초가 지나면 시간초과로 취소됩니다)
 					`).then((th) => th.delete(20000));
 					try {
@@ -126,7 +126,7 @@ ${videos.map(video2 => `**${++index} -** ${video2.title} ( ${video2.length} )`).
 					let index = 0;
 					msg.channel.send(`
 __**검색결과:**__
-${videos.map(video2 => `**${++index} -** ${video2.title} ( ${video2.length} )`).join('\n')}
+${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 1 - 5 를 입력하여 선택하시면 됩니다. (20초가 지나면 시간초과로 취소됩니다)
 					`).then((th) => th.delete(20000));
 					// eslint-disable-next-line max-depth
@@ -182,7 +182,9 @@ ${videos.map(video2 => `**${++index} -** ${video2.title} ( ${video2.length} )`).
 		return msg.channel.send(`볼륨 변경 완료! : **${args[1]}**`);
 	} else if (command === '뭐부르고있음' || command === '지금' || command === '뭐임' || msg.content.startsWith('노트뭐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안부름');
-		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}** ( ${serverQueue.songs[0].length} )`);
+		ytdl.getBasicInfo(serverQueue.songs[0].url, (err1, info) => {
+		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}** ( ${info.length_seconds / 60} 분 )`);
+		});
 	} else if (command === '재생목록' || command === '뭐남음' || msg.content.startsWith('노트큐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안남음');
 		return msg.channel.send(`
