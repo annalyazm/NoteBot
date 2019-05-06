@@ -72,7 +72,7 @@ client.on('message', async msg => {
 					let index = 0;
 					msg.channel.send(`
 __**검색결과:**__
-${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
+${videos.map(video2 => `**${++index} -** ${video2.title} ( ${video2.length_seconds} 초 )`).join('\n')}
 1 - 5 를 입력하여 선택하시면 됩니다. (20초가 지나면 시간초과로 취소됩니다)
 					`).then((th) => th.delete(20000));
 					try {
@@ -126,7 +126,7 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 					let index = 0;
 					msg.channel.send(`
 __**검색결과:**__
-${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
+${videos.map(video2 => `**${++index} -** ${video2.title} ( ${video2.length_seconds} 초 )`).join('\n')}
 1 - 5 를 입력하여 선택하시면 됩니다. (20초가 지나면 시간초과로 취소됩니다)
 					`).then((th) => th.delete(20000));
 					// eslint-disable-next-line max-depth
@@ -159,7 +159,7 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 		serverQueue.connection.dispatcher.end('쳇..');
 		msg.channel.send("알겠어 그만부를게..");
 		return undefined;
-	} else if (command === '멈춰' || command === '초기화' || msg.content.startsWith('노트정')) {
+	} else if (command === '정지' || command === '멈춰' || command === '초기화' || msg.content.startsWith('노트정')) {
 		if (!msg.member.voiceChannel) return msg.channel.send('먼저 음성 채널에 들어가시죠');
 		if (!serverQueue) return msg.channel.send('님한테 멈춰줄 노래가 없네요 ㅅㄱ');
 		serverQueue.songs = [];
@@ -182,13 +182,13 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 		return msg.channel.send(`볼륨 변경 완료! : **${args[1]}**`);
 	} else if (command === '뭐부르고있음' || command === '지금' || command === '뭐임' || msg.content.startsWith('노트뭐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안부름');
-		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}**`);
+		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}** ( ${serverQueue.songs[0].title.length_seconds} 초 )`);
 	} else if (command === '재생목록' || command === '뭐남음' || msg.content.startsWith('노트큐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안남음');
 		return msg.channel.send(`
 __**재생목록:**__
-${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}
-**지금 부르는거:** ${serverQueue.songs[0].title}
+${serverQueue.songs.map(song => `**-** ${song.title} ( ${song.length_seconds} 초 ) `).join('\n')}
+**지금 부르는거:** ${serverQueue.songs[0].title} ( ${serverQueue.songs[0].length_seconds} 초 )
 		`);
 	} else if (command === '일시정지' || command === '잠만') {
 		if (serverQueue && serverQueue.playing) {
