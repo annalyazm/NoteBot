@@ -183,14 +183,16 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 	} else if (command === '뭐부르고있음' || command === '지금' || command === '뭐임' || msg.content.startsWith('노트뭐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안부름');
 		ytdl.getBasicInfo(serverQueue.songs[0].url, (err1, info) => {
-		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}** ( ${info.length_seconds / 60} 분 )`);
+	       let vedl = `${info.length_seconds / 60}`
+	       info.replace('.', ':')
+		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}**`);
 		});
 	} else if (command === '재생목록' || command === '뭐남음' || msg.content.startsWith('노트큐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안남음');
 		return msg.channel.send(`
 __**재생목록:**__
 ${serverQueue.songs.map(song => `**-** ${song.title} ( ${song.length} ) `).join('\n')}
-**지금 부르는거:** ${serverQueue.songs[0].title} ( ${serverQueue.songs[0].length} )
+__**지금 부르는거:**__ ${serverQueue.songs[0].title}
 		`);
 	} else if (command === '일시정지' || command === '잠만') {
 		if (serverQueue && serverQueue.playing) {
