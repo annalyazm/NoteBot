@@ -1,16 +1,12 @@
 {
-  "name": "muzicbotapi",
+  "name": "NoteBot",
   "version": "1.0.0",
   "description": "",
   "main": "CORE.js",
   "scripts": {
     "test": "node CORE.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/PMHStudio/DiscordMuzicBot.git"
-  },
-  "author": "PMH Studio / PMH",
+  "author": "Oasics",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/PMHStudio/DiscordMuzicBot/issues"
