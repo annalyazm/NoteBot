@@ -200,7 +200,7 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 	} else if (msg.content.startsWith('노트볼')) {
 		if (!msg.member.voiceChannel) return msg.channel.send('음성 채널에 먼저 들어와!');
 		if (!serverQueue) return msg.channel.send('부르고 있는 노래가 없어;;');
-		if (!args[1]) return msg.channel.send(`현재 볼륨: **${serverQueue.volume * 100}**`);
+		if (!args[1]) return msg.channel.send(`현재 볼륨: **${serverQueue.volume * 10}**`);
 		serverQueue.volume = args[1];
 		serverQueue.connection.dispatcher.setVolumeLogarithmic(args[1] / 100);
 		return msg.channel.send(`볼륨 변경 완료! : **${args[1]}**`);
