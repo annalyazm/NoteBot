@@ -195,7 +195,7 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 		if (!serverQueue) return msg.channel.send('아무것도 안남음');
 		return msg.channel.send(`
 __**재생목록:**__
-${serverQueue.songs.map(song => `**-** ${song.title} ( ${song.length} ) `).join('\n')}
+${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}
 __**지금 부르는거:**__ ${serverQueue.songs[0].title}
 		`);
 	} else if (command === '일시정지' || command === '잠만') {
@@ -256,7 +256,7 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
 	       let vedl = `${info.length_seconds / 60}`
 	       vedl.replace('.', ':')
 		return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
-		}
+		
 });
 	}
 	return undefined;
