@@ -250,11 +250,13 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
 	} else {
 		serverQueue.songs.push(song);
 		console.log(serverQueue.songs);
-		if (playlist) return undefined;
+		if (playlist)  { return undefined; 
+			       } else {
 		ytdl.getBasicInfo(song.url, (err1, info) => {
 	       let vedl = `${info.length_seconds / 60}`
 	       vedl.replace('.', ':')
-		else return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
+		return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
+		}
 });
 	}
 	return undefined;
