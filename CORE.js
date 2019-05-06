@@ -21,6 +21,7 @@ client.on('ready', () => {
     }
 })
 console.log('준비됨!')
+	client.user.setActivity(`'노트야 도움말' 해봐!`, {type: "PLAYING"});
 });
 
 const youtube = new YouTube(GOOGLE_API_KEY);
@@ -44,6 +45,21 @@ client.on('message', async msg => {
 	let command = pr.split(' ')[0];
 
 
+        if (command === '도움' || command === '도움말' || msg.content.startsWith('노트도움')) {
+		
+		let help = new Discord.RichEmbed()
+		.setTitle('노트봇 도움말')
+		.addField('플레이', '노트플 / 노트야 플레이 / 노트야 불러줘')
+		.addField('스킵', '노트닥 / 노트야 닥쳐 / 노트야 스킵')
+		.addField('정지', '노트정 / 노트야 정지 / 노트야 초기화')
+		.addField('볼륨', '노트볼 / 노트야 볼륨')
+		.addField('재생목록', '노트큐 / 노트야 재생목록 / 노트야 뭐남음')
+		.addField('정보', '노트뭐 / 노트야 뭐임')
+		.setColor('#00ff6c')
+		.setFooter('버그 리포트는 Oasics#5074 로 DM ㄱㄱ')
+		msg.channel.send(help)
+		
+	}
 	if (command === '불러줘' || command === '플레이') {
 		const voiceChannel = msg.member.voiceChannel;
 		if (!voiceChannel) return msg.channel.send(`${msg.author.username} 이 음성채널에 없습니다. \n음성채널에 들어간다음 다시 시도해 보세요.`);
