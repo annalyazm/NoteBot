@@ -1,1 +1,1 @@
-music: node CORE.js
+worker: node CORE.js
