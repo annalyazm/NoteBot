@@ -60,7 +60,7 @@ client.on('message', async msg => {
 		msg.channel.send(help)
 		
 	}
-	if (command === '서버') { msg.channel.send(`${client.guilds.size}`) }
+	if (command === '서버' || msg.content.startsWith('노트섭')) { msg.channel.send(`${client.guilds.size}`) }
 	if (command === '불러줘' || command === '플레이') {
 		const voiceChannel = msg.member.voiceChannel;
 		if (!voiceChannel) return msg.channel.send(`${msg.author.username} 이 음성채널에 없습니다. \n음성채널에 들어간다음 다시 시도해 보세요.`);
