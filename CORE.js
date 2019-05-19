@@ -60,6 +60,7 @@ client.on('message', async msg => {
 		msg.channel.send(help)
 		
 	}
+	if (command === '프로필사진') { msg.channel.send(client.user.avatarURL) }
 	if (command === '서버' || msg.content.startsWith('노트섭')) { msg.channel.send(`${client.guilds.size}`) }
 	if (command === '불러줘' || command === '플레이') {
 		const voiceChannel = msg.member.voiceChannel;
