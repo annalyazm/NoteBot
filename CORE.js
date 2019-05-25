@@ -94,7 +94,7 @@ client.on('message', async msg => {
                       .setColor(`#00ffc1`)
                       .setFooter(`공지 발신자: ${msg.member.user.tag} - 인증됨`, msg.author.avatarURL)
                       .setTimestamp()
-                        let Ch = bot.channels.get(cha)
+                        let Ch = client.channels.get(cha)
                        Ch.sendEmbed(ann)
 
                        })
