@@ -88,7 +88,7 @@ client.on('message', async msg => {
  
                       let cha = msguild
                       let ann = new Discord.RichEmbed()
-                      .setTitle('워터봇 공지')
+                      .setTitle('노트봇 공지')
                       .setThumbnail(client.user.avatarURL)
                       .setDescription(`${reason}`)
                       .setColor(`#00ffc1`)
