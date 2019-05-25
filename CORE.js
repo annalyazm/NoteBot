@@ -61,6 +61,87 @@ client.on('message', async msg => {
 		
 	}
 	if (command === '서버' || msg.content.startsWith('노트섭')) { msg.channel.send(`${client.guilds.size}`) }
+        if (command === '공지') {
+    let filter = (reaction, user) => (reaction.emoji.name === '❌' || reaction.emoji.name === '⭕') && user.id === message.author.id
+
+            let owners = process.env.owners
+            if (owners.includes(msg.author.id)) {
+     
+                  let reason1 = msg.content.replace(`노트야 공지 `, "")
+                  msg.channel.send(`${client.guilds.size}개의 서버에 공지가 발신됩니다. 공지 내용은 다음과 같습니다\n${reason1}`).then((th) => {
+                  th.react('❌')
+                  th.react('⭕')
+                   th.awaitReactions(filter, {
+                   time: 30000,
+                   max: 1
+                   }).then((collected) => {
+                  if (collected.array()[0].emoji.name === '⭕') {
+
+               superagent.get("http://api.myjson.com/bins/6zrt0").then((res) => {
+                   let welcomechannel = res.body;
+
+                    client.guilds.forEach(g => {
+                let reason = msg.content.replace(`노트야 공지 `, "")
+ 
+                 if(!welcomechannel[g.id]){ return }
+                   let msguild = welcomechannel[g.id].welcomechannel	
+                   if (msguild === 0) { return }
+ 
+                      let cha = msguild
+                      let ann = new Discord.RichEmbed()
+                      .setTitle('워터봇 공지')
+                      .setThumbnail(client.user.avatarURL)
+                      .setDescription(`${reason}`)
+                      .setColor(`#00ffc1`)
+                      .setFooter(`공지 발신자: ${msg.member.user.tag} - 인증됨`, msg.author.avatarURL)
+                      .setTimestamp()
+                        let Ch = bot.channels.get(cha)
+                       Ch.sendEmbed(ann)
+
+                       })
+                 let reason = msg.content.replace(`노트야 공지 `, "")
+                 msg.channel.send(`
+발신이 완료되었습니다!
+공지 내용은 [ ${reason} ] 입니다.
+`)
+                    });
+                 } else { msg.channel.send('공지 발신이 취소되었습니다.') }
+                                           });
+                                 });
+	    } else {
+              msg.channel.send('당신은 봇 관리자로 등록되어있지 않습니다.')
+           }
+        }
+	if (command === '채널설정') {
+		if (searchString === '공지') {
+			superagent.get("http://api.myjson.com/bins/6zrt0").then((res) => {
+                        let welcomechannel = res.body;
+				
+				  if(!welcomechannel[msg.guild.id]){
+                                    welcomechannel[msg.guild.id] = {
+                                        welcomechannel: 0
+                                    };
+                                   }
+                        let msguild = welcomechannel[msg.guild.id].welcomechannel		
+                  if (msguild === 0) {
+		     let chaid = msg.channel.id
+                      welcomechannel[msg.guild.id] = {
+                         welcomechannel: chaid
+                      };
+                     msg.channel.send('공지 채널이 설정되었습니다.')
+                   } else if (msguild > 0) {
+	                let chaid = msg.channel.id
+                        welcomechannel[msg.guild.id] = {
+                               welcomechannel: 0
+                         };
+	
+	msg.channel.send("공지 채널이 초기화되었습니다")
+	
+          }
+            superagent.put("http://api.myjson.com/bins/6zrt0").send(welcomechannel).catch((err) => console.log(err));
+			});
+		}
+	}
 	if (command === '불러줘' || command === '플레이') {
 		const voiceChannel = msg.member.voiceChannel;
 		if (!voiceChannel) return msg.channel.send(`${msg.author.username} 이 음성채널에 없습니다. \n음성채널에 들어간다음 다시 시도해 보세요.`);
