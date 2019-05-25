@@ -8,8 +8,7 @@ const { Client, Util } = require('discord.js');
 const PREFIX = "노트야 "
 const GOOGLE_API_KEY = "AIzaSyD5HkfjExwmv2HFDfS0zwAHdkrNNEmJcsw"
 const YouTube = require('simple-youtube-api');
-const ytdl = require('ytdl-core');
-
+const superagent = require('superagent')
 const client = new Discord.Client();
 
 client.login(TheToken)
