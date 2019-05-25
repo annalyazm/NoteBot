@@ -54,7 +54,7 @@ client.on('message', async msg => {
 		.addField('정지', '노트정 / 노트야 정지 / 노트야 초기화')
 		.addField('볼륨', '노트볼 / 노트야 볼륨')
 		.addField('재생목록', '노트큐 / 노트야 재생목록 / 노트야 뭐남음')
-		.addField('정보', '노트뭐 / 노트야 뭐임')
+		.addField('음악 정보', '노트뭐 / 노트야 뭐임')
 		.setColor('#00ff6c')
 		.setFooter('버그 리포트는 Oasics#5074 로 DM ㄱㄱ')
 		msg.channel.send(help)
