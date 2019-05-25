@@ -26,6 +26,7 @@
     "random-hex-color": "^1.0.1",
     "youtube-search": "^1.1.4",
     "ytdl-core": "^0.29.1",
-    "simple-youtube-api": "^5.1.1"
+    "simple-youtube-api": "^5.1.1",
+    "superagent": "5.0.5"
   }
 }
