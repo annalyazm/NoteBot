@@ -10,6 +10,7 @@ const GOOGLE_API_KEY = "AIzaSyD5HkfjExwmv2HFDfS0zwAHdkrNNEmJcsw"
 const YouTube = require('simple-youtube-api');
 const superagent = require('superagent')
 const client = new Discord.Client();
+const ytdl = require('ytdl-core');
 
 client.login(TheToken)
 
