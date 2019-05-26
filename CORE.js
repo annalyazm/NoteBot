@@ -161,7 +161,9 @@ client.on('message', async msg => {
 				await handleVideo(video2, msg, voiceChannel, true);
 			}
       ytdl.getBasicInfo(playlist.url, (err1, info) => {
-       let vedl = `${info.length_minute}` + ':' + `${info.length_seconds}`
+       let vedl = info.length_seconds / 60
+	       vedl = vedl.split('.')
+	       vedl = `${vedl[0]}` + `:` + `${info.length_seconds % 60}`
 			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
     });
 		} else {
@@ -218,7 +220,9 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 				await handleVideo(video2, msg, voiceChannel, true); // eslint-disable-line no-await-in-loop
 			}
 	     ytdl.getBasicInfo(playlist.url, (err1, info) => {
-	       let vedl = `${info.length_minute}` + ':' + `${info.length_seconds}`
+	       let vedl = info.length_seconds / 60
+	       vedl = vedl.split('.')
+	       vedl = `${vedl[0]}` + `:` + `${info.length_seconds % 60}`
 			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
 	     });
 		} else {
@@ -289,7 +293,9 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 	} else if (command === '뭐부르고있음' || command === '지금' || command === '뭐임' || msg.content.startsWith('노트뭐')) {
 		if (!serverQueue) return msg.channel.send('아무것도 안부름');
 		ytdl.getBasicInfo(serverQueue.songs[0].url, (err1, info) => {
-	       let vedl = `${info.length_minute}` + ':' + `${info.length_seconds}`
+	       let vedl = info.length_seconds / 60
+	       vedl = vedl.split('.')
+	       vedl = `${vedl[0]}` + `:` + `${info.length_seconds % 60}`
 		return msg.channel.send(`🎶 지금 부르는거: **${serverQueue.songs[0].title}** ( ${vedl} )`);
 		});
 	} else if (command === '재생목록' || command === '뭐남음' || msg.content.startsWith('노트큐')) {
@@ -354,7 +360,9 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
 		if (playlist)  { return undefined;
 			       } else {
 		ytdl.getBasicInfo(song.url, (err1, info) => {
-	       let vedl = `${info.length_minute}` + ':' + `${info.length_seconds}`
+	       let vedl = info.length_seconds / 60
+	       vedl = vedl.split('.')
+	       vedl = `${vedl[0]}` + `:` + `${info.length_seconds % 60}`
 		return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
 
 });
@@ -383,7 +391,9 @@ function play(guild, song) {
 		.on('error', error => console.error(error));
 	dispatcher.setVolumeLogarithmic(serverQueue.volume);
 	      ytdl.getBasicInfo(song.url, (err1, info) => {
-	       let vedl = `${info.length_minute}` + ':' + `${info.length_seconds}`
+	       let vedl = info.length_seconds / 60
+	       vedl = vedl.split('.')
+	       vedl = `${vedl[0]}` + `:` + `${info.length_seconds % 60}`
 
 	serverQueue.textChannel.send(`🎶  **${song.title}** (${vedl}) 들려줄게`);
 	      });
