@@ -160,9 +160,11 @@ client.on('message', async msg => {
 				await handleVideo(video2, msg, voiceChannel, true);
 			}
       ytdl.getBasicInfo(playlist.url, (err1, info) => {
-       let vedl = `${info.length_seconds / 60}`
-       vedl = vedl.replace('.', ':')
-			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다!`);
+       let vedl = info.length_seconds / 60
+	       vedl = vedl.toFixed(2);
+	       vedl = `${vedl}`
+	       vedl = vedl.replace('.', ':')
+			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
     });
 		} else {
 			try {
@@ -218,7 +220,9 @@ ${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
 				await handleVideo(video2, msg, voiceChannel, true); // eslint-disable-line no-await-in-loop
 			}
 	     ytdl.getBasicInfo(playlist.url, (err1, info) => {
-	       let vedl = `${info.length_seconds / 60}`
+	       let vedl = info.length_seconds / 60
+	       vedl = vedl.toFixed(2);
+	       vedl = `${vedl}`
 	       vedl = vedl.replace('.', ':')
 			return msg.channel.send(`✅ **${playlist.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
 	     });
@@ -356,8 +360,10 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
 		if (playlist)  { return undefined;
 			       } else {
 		ytdl.getBasicInfo(song.url, (err1, info) => {
-	       let vedl = `${info.length_seconds / 60}`
-	       vedl = vedl = vedl.replace('.', ':')
+	       let vedl = info.length_seconds / 60
+	       vedl = vedl.toFixed(2);
+	       vedl = `${vedl}`
+	       vedl = vedl.replace('.', ':')
 		return msg.channel.send(`✅ **${song.title}** 가 재생목록에 추가되었습니다! ( ${vedl} )`);
 
 });
@@ -386,7 +392,9 @@ function play(guild, song) {
 		.on('error', error => console.error(error));
 	dispatcher.setVolumeLogarithmic(serverQueue.volume);
 	      ytdl.getBasicInfo(song.url, (err1, info) => {
-	       let vedl = `${info.length_seconds / 60}`
+	       let vedl = info.length_seconds / 60
+	       vedl = vedl.toFixed(2);
+	       vedl = `${vedl}`
 	       vedl = vedl.replace('.', ':')
 
 	serverQueue.textChannel.send(`🎶  **${song.title}** (${vedl}) 들려줄게`);
