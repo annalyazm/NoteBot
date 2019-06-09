@@ -62,55 +62,81 @@ client.on('message', async msg => {
 	}
 	if (command === '서버' || msg.content.startsWith('노트섭')) { msg.channel.send(`${client.guilds.size}`) }
         if (command === '공지') {
-    let filter = (reaction, user) => (reaction.emoji.name === '❌' || reaction.emoji.name === '⭕') && user.id === msg.author.id
-
-            let owners = process.env.owners
-            if (owners.includes(msg.author.id)) {
-     
-                  let reason1 = msg.content.replace(`노트야 공지 `, "")
-                  msg.channel.send(`${client.guilds.size}개의 서버에 공지가 발신됩니다. 공지 내용은 다음과 같습니다\n${reason1}`).then((th) => {
-                  th.react('❌')
-                  th.react('⭕')
-                   th.awaitReactions(filter, {
-                   time: 30000,
-                   max: 1
-                   }).then((collected) => {
-                  if (collected.array()[0].emoji.name === '⭕') {
-
-               superagent.get("http://api.myjson.com/bins/6zrt0").then((res) => {
-                   let welcomechannel = res.body;
-
-                    client.guilds.forEach(g => {
-                let reason = msg.content.replace(`노트야 공지 `, "")
+     let owners = process.env.owners
+ let prefix = '노트야 공지 '
  
-                 if(!welcomechannel[g.id]){ return }
-                   let msguild = welcomechannel[g.id].welcomechannel	
-                   if (msguild === 0) { return }
- 
-                      let cha = msguild
-                      let ann = new Discord.RichEmbed()
-                      .setTitle('노트봇 공지')
-                      .setThumbnail(client.user.avatarURL)
-                      .setDescription(`${reason}`)
-                      .setColor(`#00ffc1`)
-                      .setFooter(`공지 발신자: ${msg.member.user.tag} - 인증됨`, msg.author.avatarURL)
-                      .setTimestamp()
-                        let Ch = client.channels.get(cha)
-                       Ch.sendEmbed(ann)
-
-                       })
-                 let reason = msg.content.replace(`노트야 공지 `, "")
-                 msg.channel.send(`
-발신이 완료되었습니다!
-공지 내용은 [ ${reason} ] 입니다.
-`)
-                    });
-                 } else { msg.channel.send('공지 발신이 취소되었습니다.') }
-                                           });
-                                 });
-	    } else {
-              msg.channel.send('당신은 봇 관리자로 등록되어있지 않습니다.')
-           }
+    let filter = (reaction, user) => (reaction.emoji.name === '❌' || reaction.emoji.name === '⭕') && user.id === message.author.id
+    if (owners.includes(msg.author.id)) {
+      let reason = message.content.replace(`${prefix} `, '')
+      let firstembed = new Discord.RichEmbed()
+      .setTitle(`${client.guilds.size}개의 서버에 공지가 발신됩니다`)
+      .addField(`공지의 내용은 다음과 같습니다`, `\`\`\`\n${reason}\n\`\`\``)
+      .setColor(Math.floor(Math.random() * 16777214) + 1)
+      .setFooter('Discord.Js Notice Bot by 오아시스 (iOas // Oasics#5074)')
+      msg.channel.send(firstembed).then((th) => {
+        th.react('❌')
+        th.react('⭕')
+        th.awaitReactions(filter, {
+          max: 1
+        }).then((collected) => {
+          if (collected.array()[0].emoji.name === '⭕') {
+		 let errors = ``
+            client.guilds.forEach(g => {
+              let reason = msg.content.replace(`${prefix} `, '')
+              let gc
+	       g.channels.forEach(c => {
+                let cname = `${c.name}`
+                if (cname.includes('공지') || cname.includes('notice') || cname.includes('알림') || cname.includes('announce')) {
+                  if (!cname.includes('업로드') && !cname.includes('길드') && !cname.includes('벤') && !cname.includes('경고') && !cname.includes('guild') && !cname.includes('ban') && !cname.includes('warn') && !cname.includes('영상')) {
+                    gc = `${c.id}`
+                  }
+                }
+              })
+              let ann = new Discord.RichEmbed()
+                .setTitle(`노트봇 공지`)
+                .setThumbnail(client.user.avatarURL)
+                .setDescription(`${reason}`)
+                .setColor(Math.floor(Math.random() * 16777214) + 1)
+                .setFooter(`공지 발신자: ${msg.member.user.tag} - 인증됨`, msg.author.avatarURL)
+                .setTimestamp()
+              let Ch = client.channels.get(gc)
+              let ment
+              try {
+                if (!Ch.permissionsFor(g.me).has(`SEND_MESSAGES`)) {
+                  ment = `${g.name}: 발신 실패 (메시지 발신 권한 없음)\n`
+                } else { Ch.send(ann) }
+              } catch (e) {
+                if (!g.me.hasPermission("MANAGE_CHANNELS")) {
+                ment = `${g.name}: 발신 실패 (채널 생성 권한 없음)\n`
+                } else {
+                ment = `${g.name}: 채널 자동 생성 및 발신 성공\n`
+                g.createChannel(`공지-자동생성됨`).then(channel => {
+                  channel.send(ann)
+                })
+              }
+              } finally {
+                if (ment) { errors += ment }
+              }
+            })
+            if (errors === ``) { errors = '성공적으로 모든 서버에 발신되었습니다!' }
+            let finalembed = new Discord.RichEmbed()
+            .setTitle('발신이 완료되었습니다!')
+            .addField('결과:', `\`\`\`\n${errors}\n \`\`\``)
+            .setColor(Math.floor(Math.random() * 16777214) + 1)
+            .setFooter('Discord.Js Notice Bot by 오아시스 (iOas // Oasics#5074)')
+            th.edit(finalembed)
+          } else {
+            let cemb = new Discord.RichEmbed()
+            .setTitle('공지 발신이 취소되었습니다')
+            .setColor(Math.floor(Math.random() * 16777214) + 1)
+            .setFooter('Discord.Js Notice Bot by 오아시스 (iOas // Oasics#5074)')
+            th.edit(cemb)
+          }
+        })
+      })
+    } else {
+	 message.channel.send('당신은 봇 관리자로 등록되어있지 않습니다.')
+}
         }
 	if (command === '채널설정') {
 		if (searchString === '공지') {
