@@ -63,7 +63,7 @@ client.on('message', async msg => {
 	if (command === '서버' || msg.content.startsWith('노트섭')) { msg.channel.send(`${client.guilds.size}`) }
         if (command === '공지') {
      let owners = process.env.owners
- let prefix = '노트야 공지 '
+ let prefix = '노트야 공지'
  
     let filter = (reaction, user) => (reaction.emoji.name === '❌' || reaction.emoji.name === '⭕') && user.id === msg.author.id
     if (owners.includes(msg.author.id)) {
