@@ -65,9 +65,9 @@ client.on('message', async msg => {
      let owners = process.env.owners
  let prefix = '노트야 공지 '
  
-    let filter = (reaction, user) => (reaction.emoji.name === '❌' || reaction.emoji.name === '⭕') && user.id === message.author.id
+    let filter = (reaction, user) => (reaction.emoji.name === '❌' || reaction.emoji.name === '⭕') && user.id === msg.author.id
     if (owners.includes(msg.author.id)) {
-      let reason = message.content.replace(`${prefix} `, '')
+      let reason = msg.content.replace(`${prefix} `, '')
       let firstembed = new Discord.RichEmbed()
       .setTitle(`${client.guilds.size}개의 서버에 공지가 발신됩니다`)
       .addField(`공지의 내용은 다음과 같습니다`, `\`\`\`\n${reason}\n\`\`\``)
@@ -135,7 +135,7 @@ client.on('message', async msg => {
         })
       })
     } else {
-	 message.channel.send('당신은 봇 관리자로 등록되어있지 않습니다.')
+	 msg.channel.send('당신은 봇 관리자로 등록되어있지 않습니다.')
 }
         }
 	if (command === '채널설정') {
